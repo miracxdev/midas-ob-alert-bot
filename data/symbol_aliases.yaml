@@ -1,0 +1,4 @@
+# Midas sembolü → borsadaki base sembol (gerekirse ekle)
+# Örnek:
+# "1000PEPE": "PEPE"
+{}

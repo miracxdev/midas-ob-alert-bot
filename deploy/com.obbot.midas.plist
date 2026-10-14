@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Şablon: scripts/install_launchd.sh __PROJECT__ ve __HOME__ yer tutucularını doldurup
+     ~/Library/LaunchAgents/com.obbot.midas.plist olarak kurar. -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.obbot.midas</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__HOME__/venv/bin/python</string>
+        <string>-m</string>
+        <string>obbot.main</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__PROJECT__</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PYTHONPATH</key>
+        <string>__PROJECT__/src</string>
+        <key>OBBOT_HOME</key>
+        <string>__HOME__</string>
+        <key>PYTHONUNBUFFERED</key>
+        <string>1</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+    <key>StandardOutPath</key>
+    <string>__HOME__/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/logs/launchd.err.log</string>
+</dict>
+</plist>

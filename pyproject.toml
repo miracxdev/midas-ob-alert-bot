@@ -1,0 +1,44 @@
+[project]
+name = "obbot"
+version = "0.1.0"
+description = "Midas En Çok Artan → Order Block bildirim botu"
+requires-python = ">=3.11"
+dependencies = [
+    "ccxt>=4.3",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "httpx>=0.27",
+    "apscheduler>=3.10,<4",
+    "loguru>=0.7",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "freezegun>=1.5", "ruff>=0.5"]
+
+[project.scripts]
+obbot = "obbot.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Dayanıklılık için bilinçli geniş except'ler (bir coin/kanal hatası diğerlerini durdurmaz)
+ignore = ["BLE001"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]

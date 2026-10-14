@@ -1,0 +1,34 @@
+timezone: Europe/Istanbul
+
+watchlist:
+  refresh_at: "16:25"
+  top_n: 20
+  # Midas "En Çok Artan" sayfası birincil kaynak; diğerleri yedek.
+  sources: [midas_web, manual, file]
+  midas_url: "https://www.getmidas.com/canli-kripto/en-cok-artan"
+  # Günlük değişimi bu yüzdeden büyük olan coinler atlanır (null = filtre yok).
+  max_change_pct: null
+  # Tarama penceresi boyunca her saat (refresh_at dakikasında, ör. 17:25, 18:25…) listeyi yenile
+  hourly_refresh: true
+
+scan_window: { start: "16:30", end: "23:59" }
+days: [mon, tue, wed, thu, fri, sat, sun]
+timeframes: ["5m"]
+candle_close_delay_sec: 10
+# Bundan eski mumlarda oluşan OB'ler bildirilmez (5m × 3 = 15 dk). Listeye sonradan giren
+# coinin eski OB'sini göndermemek için.
+max_signal_age_bars: 3
+
+exchanges: [binance, okx, bybit, gate, kucoin, mexc]
+quote_preference: [USDT, USD]
+min_bars: 200
+
+ob:
+  engine: custom          # default | custom
+  direction: bullish       # bullish | bearish | both
+  events: [ob_formed]      # ob_formed, ob_retest
+  # custom (LuxAlgo) için TradingView ayarlarıyla aynı olmalı: Swing Lookback, Use Candle Body
+  params: { swing_len: 10, use_body: true }
+
+notifiers: [telegram, macos]
+merge_window_min: 10

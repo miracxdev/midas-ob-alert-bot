@@ -1,0 +1,23 @@
+# Linux / VPS / Raspberry Pi için systemd servisi.
+# Kurulum (proje /opt/obbot altında, kullanıcı "obbot" varsayılmıştır):
+#   sudo cp deploy/obbot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now obbot
+#   journalctl -u obbot -f
+[Unit]
+Description=Midas OB bildirim botu
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=obbot
+WorkingDirectory=/opt/obbot
+Environment=OBBOT_HOME=/home/obbot/.local/share/obbot
+Environment=PYTHONPATH=/opt/obbot/src
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/obbot/.local/share/obbot/venv/bin/python -m obbot.main
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
