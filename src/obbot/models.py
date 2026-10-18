@@ -41,7 +41,7 @@ class Market:
 class OBSignal:
     market: Market
     timeframe: str
-    kind: Literal["ob_formed", "ob_retest"]
+    kind: Literal["ob_formed", "ob_retest", "cisd"]
     direction: Literal["bullish", "bearish"]
     zone_low: float
     zone_high: float

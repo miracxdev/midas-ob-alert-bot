@@ -24,11 +24,17 @@ quote_preference: [USDT, USD]
 min_bars: 200
 
 ob:
-  engine: custom          # default | custom
-  direction: bullish       # bullish | bearish | both
-  events: [ob_formed]      # ob_formed, ob_retest
-  # custom (LuxAlgo) için TradingView ayarlarıyla aynı olmalı: Swing Lookback, Use Candle Body
-  params: { swing_len: 10, use_body: true }
+  # po3     = PO3 Model [CantoLab] → C2 + CISD (şu an kullanılan)
+  # custom  = LuxAlgo ICT Concepts Order Block
+  # default = basit swing/BOS Order Block
+  engine: po3
+  direction: bullish       # bullish (+CISD) | bearish (-CISD) | both
+  events: [cisd]           # po3 için: cisd · OB motorları için: ob_formed, ob_retest
+  params:
+    htf: "1h"              # po3: Alignment Auto → 5m grafik ↔ 1h üst zaman dilimi
+    # custom/default OB motorları için (LuxAlgo: Swing Lookback, Use Candle Body)
+    swing_len: 10
+    use_body: true
 
 notifiers: [telegram, macos]
 merge_window_min: 10

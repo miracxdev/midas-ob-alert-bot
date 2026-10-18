@@ -23,7 +23,7 @@ from obbot.config import OBParams
 from obbot.ob.pivots import pivot_highs, pivot_lows
 
 Direction = Literal["bullish", "bearish"]
-Kind = Literal["ob_formed", "ob_retest"]
+Kind = Literal["ob_formed", "ob_retest", "cisd"]
 
 
 @dataclass(frozen=True)

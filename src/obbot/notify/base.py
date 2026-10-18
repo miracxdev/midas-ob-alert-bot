@@ -27,13 +27,29 @@ def fmt_price(x: float) -> str:
     return f"{x:.{decimals}f}"
 
 
+def signal_name(s: OBSignal) -> str:
+    if s.kind == "cisd":
+        return "+CISD" if s.direction == "bullish" else "-CISD"
+    return f"{s.direction.upper()} {'OB' if s.kind == 'ob_formed' else 'OB RETEST'}"
+
+
 def format_signal(s: OBSignal, tz: ZoneInfo) -> str:
     dot = "🟢" if s.direction == "bullish" else "🔴"
-    label = "OB" if s.kind == "ob_formed" else "OB RETEST"
     local = s.candle_time.astimezone(tz)
     url = f"{s.market.tv_url}&interval={TV_INTERVAL.get(s.timeframe, s.timeframe)}"
+    if s.kind == "cisd":
+        bullish = s.direction == "bullish"
+        return (
+            f"{dot} {signal_name(s)} — {s.market.ccxt_symbol} ({s.timeframe})\n"
+            f"CISD seviyesi: {fmt_price(s.zone_high if bullish else s.zone_low)}\n"
+            f"C2 {'dibi' if bullish else 'tepesi'}: {fmt_price(s.zone_low if bullish else s.zone_high)}\n"
+            f"Fiyat: {fmt_price(s.price)}\n"
+            f"Mum: {local:%H:%M} (İST)\n"
+            f"Borsa: {s.market.exchange.capitalize()}\n"
+            f"📈 {url}"
+        )
     return (
-        f"{dot} {s.direction.upper()} {label} — {s.market.ccxt_symbol} ({s.timeframe})\n"
+        f"{dot} {signal_name(s)} — {s.market.ccxt_symbol} ({s.timeframe})\n"
         f"Bölge: {fmt_price(s.zone_low)} – {fmt_price(s.zone_high)}\n"
         f"Fiyat: {fmt_price(s.price)}\n"
         f"Mum: {local:%H:%M} (İST)\n"
@@ -51,9 +67,9 @@ def merge_signals(signals: list[OBSignal], tz: ZoneInfo) -> list[tuple[str, str]
     for group in groups.values():
         group.sort(key=lambda s: (s.candle_time, s.timeframe))
         first = group[0]
-        title = f"{first.direction.upper()} OB — {first.market.ccxt_symbol}"
+        title = f"{signal_name(first)} — {first.market.ccxt_symbol}"
         if len(group) > 1:
-            title = f"{len(group)} OB sinyali — {first.market.ccxt_symbol}"
+            title = f"{len(group)} sinyal — {first.market.ccxt_symbol}"
         out.append((title, "\n\n".join(format_signal(s, tz) for s in group)))
     return out
 

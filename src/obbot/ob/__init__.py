@@ -10,6 +10,8 @@ def detect(df: pd.DataFrame, ob_cfg: OBConfig) -> list[OBEvent]:
     """Konfigürasyondaki motoru çalıştırır, yön ve olay türüne göre filtreler."""
     if ob_cfg.engine == "custom":
         from obbot.ob import custom as engine
+    elif ob_cfg.engine == "po3":
+        from obbot.ob import po3 as engine
     else:
         from obbot.ob import default as engine
     events = engine.detect(df, ob_cfg.params)

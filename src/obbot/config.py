@@ -43,12 +43,14 @@ class ScanWindow(BaseModel):
 class OBParams(BaseModel):
     swing_len: int = Field(5, ge=1)
     use_body: bool = False
+    # po3: üst zaman dilimi (C1/C2 mumları). Auto alignment'ta 5m ↔ 1h
+    htf: str = "1h"
 
 
 class OBConfig(BaseModel):
-    engine: Literal["default", "custom"] = "default"
+    engine: Literal["default", "custom", "po3"] = "default"
     direction: Literal["bullish", "bearish", "both"] = "bullish"
-    events: list[Literal["ob_formed", "ob_retest"]] = ["ob_formed"]
+    events: list[Literal["ob_formed", "ob_retest", "cisd"]] = ["ob_formed"]
     params: OBParams = OBParams()
 
 

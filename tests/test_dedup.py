@@ -102,7 +102,7 @@ def test_merge_and_price_format():
     a = OBSignal(m, "15m", "ob_formed", "bullish", 0.00000419, 0.00000423, t, 0.00000427)
     b = OBSignal(m, "1h", "ob_formed", "bullish", 0.0000041, 0.0000043, t, 0.00000427)
     out = merge_signals([a, b], IST)
-    assert len(out) == 1 and out[0][0] == "2 OB sinyali — PEPE/USDT"
+    assert len(out) == 1 and out[0][0] == "2 sinyal — PEPE/USDT"
     assert fmt_price(0.4123) == "0.4123"
     assert fmt_price(65012.5) == "65012.50"
     assert fmt_price(0.00001234) == "0.00001234"

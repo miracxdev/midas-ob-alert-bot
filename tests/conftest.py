@@ -10,7 +10,7 @@ from obbot.markets.ohlcv import to_closed_frame
 
 def make_df(bars: list[tuple[float, float, float, float]], start: datetime, tf: str = "15m") -> pd.DataFrame:
     """(open, high, low, close) listesinden kapanmış mum DataFrame'i üretir."""
-    step = {"15m": 15, "1h": 60}[tf] * 60_000
+    step = {"5m": 5, "15m": 15, "1h": 60}[tf] * 60_000
     t0 = int(start.timestamp() * 1000)
     raw = [[t0 + i * step, o, h, lo, c, 1.0] for i, (o, h, lo, c) in enumerate(bars)]
     return to_closed_frame(raw, tf, now=datetime(2100, 1, 1, tzinfo=UTC))

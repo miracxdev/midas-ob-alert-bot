@@ -49,17 +49,19 @@ def main() -> None:
     ob_cfg = cfg.ob.model_copy(deep=True)
     if args.direction:
         ob_cfg.direction = args.direction
-    ob_cfg.events = ["ob_formed", "ob_retest"] if args.retest else ["ob_formed"]
+    if ob_cfg.engine != "po3":
+        ob_cfg.events = ["ob_formed", "ob_retest"] if args.retest else ["ob_formed"]
 
     m = parse_tv_symbol(args.symbol, cfg.quote_preference)
     df = fetch_closed_ohlcv(m, args.timeframe, limit=args.bars)
     print(f"{m.tv_symbol} {args.timeframe} — {len(df)} mum: "
           f"{df['time'].iloc[0].astimezone(tz):%d.%m %H:%M} → {df['close_time'].iloc[-1].astimezone(tz):%d.%m %H:%M} (İST)")
     print(f"Parametreler: {ob_cfg.params.model_dump()}  yön: {ob_cfg.direction}\n")
-    print(f"{'Olay':<10} {'Yön':<8} {'OB mumu (İST)':<15} {'Sinyal (İST)':<15} {'Bölge':<28} Fiyat")
+    ref = "c2 mumu (İST)" if ob_cfg.engine == "po3" else "OB mumu (İST)"
+    print(f"{'Olay':<10} {'Yön':<8} {ref:<15} {'Sinyal (İST)':<15} {'Bölge':<28} Fiyat")
     events = ob.detect(df, ob_cfg)
     for e in events:
-        kind = "OLUŞUM" if e.kind == "ob_formed" else "RETEST"
+        kind = {"ob_formed": "OLUŞUM", "ob_retest": "RETEST", "cisd": "CISD"}[e.kind]
         zone = f"{fmt_price(e.zone_low)} – {fmt_price(e.zone_high)}"
         print(f"{kind:<10} {e.direction:<8} {e.ob_time.astimezone(tz):%d.%m %H:%M}    "
               f"{e.candle_time.astimezone(tz):%d.%m %H:%M}    {zone:<28} {fmt_price(e.price)}")
